@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "HITCON 2019 / heXDump"
+title: "HITCON CTF 2019 / heXDump"
 permalink: /hitcon-2019-hexdump
 ---
 

@@ -28,8 +28,7 @@ _DWORD *set_table()
 ```
 So, the binary calls `scanf` to read our input. Since the challenge name is `happy tree`, it might be possible that this is a tree structure. For example, index `i` might be the parent of both `2*(i+1)-1` and `2*(i+1)` etc. 
 
-Anyway, at this point I tried to write a simple angr script, because why not?
-We know by running the program that it says `Ow!` when the input is wrong, and according to the strings above, it might be printing `Wow!` for the correct input. Using these two information I wrote the following angr script:
+Anyway, at this point I tried to write a simple angr script, because why not? We know by running the program that it says `Ow!` when the input is wrong, and according to the strings above, it might be printing `Wow!` for the correct input. Using these two information I wrote the following angr script:
 
 ```python
 #!/usr/bin/env python
@@ -157,7 +156,8 @@ I let it run for ~7 hours, but the script was still running when I was back. So,
 
 At this point, [@Anciety](https://twitter.com/Anciety2) suggested me to take a look at QDBI which lead me to [this](https://blog.quarkslab.com/slaying-dragons-with-qbdi.html) write-up. My goal was to successfully log all the vm operations. However, after spending hours on Frida + QDBI configuration, I was still receiving libQDBI.so errors. I decided to give up on this and started thinking about instruction counting attack similar to that write-up.
 
-The first tool that came to my mind was `perf`, but it did not work for some reason. The other tool was Intel's `pin`, and luckily I've come found this awesome tool called [PinCTF](https://github.com/ChrisTheCoolHut/PinCTF).
+The first tool that came to my mind was `perf`, but it did not work for some reason. The other tool was Intel's `pin`, and luckily I've found this awesome tool called [PinCTF](https://github.com/ChrisTheCoolHut/PinCTF).
+
 After, running it I got the following:
 
 ```
@@ -329,6 +329,7 @@ After running this code, I got the value `0x121eda9a` which is the same value as
 Now, we need a decryption routine which is simple. If we left shift a number by n bits and xor it with itself, the lowest n bits will stay the same. So, we already know the original lowest n bits. Since, we shifted the value before xor operation, the next n bits were actually xored with the previous n bits that we recovered. As a result, we can calculate the next n bits simply by xoring them with the previous recovered n bits. Now, we know the lowest 2n bits of the original value. We can repeat this process until we recover the original value completely.
 
 The same approach applies to right-shift, we just need to start recovering from the highest n bits in that case.
+
 Here we can create two functions to decrypt both cases:
 
 ```python
@@ -356,11 +357,9 @@ Two different possibilities popped in my head:
 - The input might be xored with a secret value **after** the encryption loop.
 - Or, it might get xored with a secret value **before** the encryption loop.
 
-If it is the first case, then the secret value must be `0x121eda9a ^ 0x6d4416c0` which is `0x7f5acc5a`.
-For the second case then the secret value must be `decrypt(0x6d4416c0) ^ 0x41414141` which is `0xAAAAAAAA`.
+If it is the first case, then the secret value must be `0x121eda9a ^ 0x6d4416c0` which is `0x7f5acc5a`. For the second case then the secret value must be `decrypt(0x6d4416c0) ^ 0x41414141` which is `0xAAAAAAAA`.
 
-It turned out that both approaches successfully work. I have chosen to use the first one in my script.
-Here my the final script:
+It turned out that both approaches successfully work. I have chosen to use the first one in my script. Here is my final script:
 
 ```python
 #!/usr/bin/env python
