@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "HITCON 2020 / Tenet"
+title: "HITCON CTF 2020 / Tenet"
 permalink: /hitcon-2020-tenet
 ---
 
