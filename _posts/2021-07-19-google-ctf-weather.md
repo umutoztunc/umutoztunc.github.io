@@ -4,10 +4,10 @@ title: "Google CTF 2021 / Weather"
 permalink: /google-ctf-2021-weather
 ---
 
-## 0x00 Overview
-
 This was an interesting and fun challenge. Even though I solved it an hour
 after the CTF ended, I decided to publish a write-up for it.
+
+## 0x00 Overview
 
 The binary calls `printf("Flag: %F\n");` before it exits which prints
 `Flag: none` which suggests that `%F` is a registered conversion specifier.
